@@ -17,7 +17,7 @@ int main()
         int i,j;
         while(1)
         {
-		file = fopen("/proc/meminfo","r");
+		file = fopen("/proc/meminfo","r");	//file that contains info about memory of system in proc directory
                 fscanf(file," %[^\n]s",line);
                 for(i=0;line[i]<'0'||line[i]>'9';i++);
                 for(j=i;line[j]!=' ';j++)
@@ -36,7 +36,7 @@ int main()
                 line[j-i]='\0';
                 physMemFree = atoi(line);
                 fclose(file);
-                file = fopen("/sys/class/power_supply/BAT1/status","r");
+                file = fopen("/sys/class/power_supply/BAT1/status","r");		//Directory(BAT!) that contains files describing battery's info in sys directory 
                 fscanf(file," %s",status);
                 fclose(file);
                 file = fopen("/sys/class/power_supply/BAT1/energy_full","r");
@@ -57,11 +57,11 @@ int main()
                 }
 		else
                 {
-                        if(isCharging==0 && strcmp(status,"Charging")==0)
+                        if(isCharging==0 && strcmp(status,"Charging")==0)	//comparing battery status of previous and current iteration
                         {
                                 printf("Plugged in, Charging!!!\n");
                         }
-                        if(isCharging==1 && strcmp(status,"Discharging")==0)
+                        if(isCharging==1 && strcmp(status,"Discharging")==0)	// ""
                         {
                                 if(batteryPercent<20)
                                 {
@@ -72,21 +72,21 @@ int main()
                                         printf("Plugged out, Battery remaining: %lf %%\n",newBatteryPercent);
                                 }
                         }
-                        isCharging = strcmp(status,"Charging")==0? 1: 0;
-                        if(newBatteryPercent<20 && batteryPercent>=20)
+                        isCharging = strcmp(status,"Charging")==0? 1: 0;	//Updating isCharging flag
+                        if(newBatteryPercent<20 && batteryPercent>=20)		//comparing battery Percent of previous and current iteration
                         {
                                 printf("Low battery!!! less than 20 %% remaining...\n");
                         }
-                        if(newPhysMemPercent<20 && physMemPercent>=20)
+                        if(newPhysMemPercent<20 && physMemPercent>=20)		//comparing Memory Percent of previous and current iteration
                         {
                                 printf("Physical memory availablity LESS than 20 %%!!!\n");
                         }
-                        if(newPhysMemPercent>=20 && physMemPercent<20)
+                        if(newPhysMemPercent>=20 && physMemPercent<20)		// ""
                         {
                                 printf("Physical memory availablity MORE than 20 %%!!!\n");
                         }
                 }
-                batteryPercent = newBatteryPercent;
+                batteryPercent = newBatteryPercent;		//updating batteryPercentage
                 physMemPercent = newPhysMemPercent;
                 sleep(1);
         }
